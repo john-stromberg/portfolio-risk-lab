@@ -59,6 +59,8 @@ streamlit run app.py
 
 Open your browser to `http://localhost:8501`
 
+The advisory dashboard links to this independently hosted Streamlit UI. Start this app before opening the Portfolio Risk Lab tile.
+
 ## Usage
 
 1. **Configure Portfolio**: Use the sidebar to adjust asset allocation, initial value, and rebalancing strategy

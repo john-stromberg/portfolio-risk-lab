@@ -104,7 +104,9 @@ class MonteCarloSimulator:
 
         # Apply rebalancing if specified
         if self.portfolio.rebalance_frequency != 'never':
-            portfolio_values = self._apply_rebalancing(portfolio_values)
+            self._apply_rebalancing()
+
+        portfolio_values = self.simulation_paths.sum(axis=2)
 
         self.ending_values = portfolio_values[:, -1]
 
@@ -119,27 +121,24 @@ class MonteCarloSimulator:
 
         return portfolio_values
 
-    def _apply_rebalancing(self, portfolio_values):
-        """Apply periodic rebalancing to portfolio paths."""
+    def _apply_rebalancing(self):
+        """Reset asset weights to target allocations on the selected schedule."""
         rebalance_periods = {
             'quarterly': 3,
             'semi-annual': 6,
             'annual': 12
         }
         rebalance_period = rebalance_periods.get(self.portfolio.rebalance_frequency)
-
         if not rebalance_period:
-            return portfolio_values
+            return
 
-        # For simplicity, rebalance at specified intervals
+        allocations = np.array([
+            self.portfolio.allocations[name] / 100 for name in self.asset_names
+        ])
+
         for period in range(rebalance_period, self.num_periods + 1, rebalance_period):
-            # Rebalance proportionally to target allocations
-            allocations = np.array([
-                self.portfolio.allocations[name] / 100 for name in self.asset_names
-            ])
-            portfolio_values[:, period] = portfolio_values[:, period].sum() / len(self.asset_names)
-
-        return portfolio_values
+            total_value = self.simulation_paths[:, period, :].sum(axis=1, keepdims=True)
+            self.simulation_paths[:, period, :] = total_value * allocations
 
     def get_summary_stats(self):
         """Return summary statistics of simulation results."""

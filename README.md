@@ -1,3 +1,8 @@
+> **Moved:** This project is maintained in [portfolio-analytics/projects/portfolio-risk-lab](https://github.com/john-stromberg/portfolio-analytics/tree/main/projects/portfolio-risk-lab).
+> This repository is retained as a historical snapshot.
+
+---
+
 # Portfolio Risk Lab - Monte Carlo Analysis
 
 **Professional wealth advisor tool for portfolio risk analysis using Monte Carlo simulation.**
